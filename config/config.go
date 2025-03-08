@@ -1,58 +1,83 @@
 package config
 
 import (
+	"log"
 	"os"
-	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Server struct {
-		Port string
-	}
-	Database struct {
-		Host     string
-		Port     int
-		User     string
-		Password string
-		DbName   string
-	}
-	Mail struct {
-		Host     string
-		Port     string
-		User     string
-		Password string
-	}
-	Google struct {
-		SpreadsheetId     string
-		SheetName         string
-		PathToCredentials string
-	}
+	Server   ServerConfig
+	Database DBConfig
+	SMTP     SMTPConfig
+	Google   GoogleConfig
+}
+
+type ServerConfig struct {
+	Host string
+	Port string
+}
+
+type DBConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+}
+
+type SMTPConfig struct {
+	Host     string
+	Port     string
+	Username string
+	Password string
+	From     string
+}
+
+type GoogleConfig struct {
+	SpreadsheetID     string
+	SheetName         string
+	PathToCredentials string
 }
 
 func InitConfig(envPath string) (*Config, error) {
 	if err := godotenv.Load(envPath); err != nil {
-		return nil, err
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
-	cfg := &Config{}
-	cfg.Server.Port = os.Getenv("SERVER_PORT")
-
-	cfg.Database.Host = os.Getenv("DB_HOST")
-	cfg.Database.Port, _ = strconv.Atoi(os.Getenv("DB_PORT"))
-	cfg.Database.User = os.Getenv("DB_USER")
-	cfg.Database.Password = os.Getenv("DB_PASSWORD")
-	cfg.Database.DbName = os.Getenv("DB_NAME")
-
-	cfg.Mail.Host = os.Getenv("MAIL_HOST")
-	cfg.Mail.Port = os.Getenv("MAIL_PORT")
-	cfg.Mail.User = os.Getenv("MAIL_USER")
-	cfg.Mail.Password = os.Getenv("MAIL_PASSWORD")
-
-	cfg.Google.SpreadsheetId = os.Getenv("GOOGLE_SPREADSHEET_ID")
-	cfg.Google.SheetName = os.Getenv("GOOGLE_SHEET_NAME")
-	cfg.Google.PathToCredentials = os.Getenv("GOOGLE_CREDENTIALS_PATH")
+	cfg := &Config{
+		Server: ServerConfig{
+			Host: getEnv("SERVER_HOST", "0.0.0.0"),
+			Port: getEnv("SERVER_PORT", "8080"),
+		},
+		Database: DBConfig{
+			Host:     getEnv("DB_HOST", "localhost"),
+			Port:     getEnv("DB_PORT", "5432"),
+			User:     getEnv("DB_USER", "postgres"),
+			Password: getEnv("DB_PASSWORD", "password"),
+			DBName:   getEnv("DB_NAME", "MILLIONAIRE"),
+		},
+		SMTP: SMTPConfig{
+			Host:     getEnv("MAIL_HOST", "smtp.gmail.com"),
+			Port:     getEnv("MAIL_PORT", "587"),
+			Username: getEnv("MAIL_USER", ""),
+			Password: getEnv("MAIL_PASSWORD", ""),
+			From:     getEnv("MAIL_FROM", ""),
+		},
+		Google: GoogleConfig{
+			SpreadsheetID:     getEnv("GOOGLE_SPREADSHEET_ID", ""),
+			SheetName:         getEnv("GOOGLE_SHEET_NAME", ""),
+			PathToCredentials: getEnv("GOOGLE_CREDENTIALS_PATH", ""),
+		},
+	}
 
 	return cfg, nil
+}
+
+func getEnv(key, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
 }
