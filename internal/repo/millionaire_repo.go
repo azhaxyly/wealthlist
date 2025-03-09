@@ -40,13 +40,13 @@ func NewMillionaireRepo(db *sql.DB) *MillionaireRepo {
 
 func (r *MillionaireRepo) Create(m *models.Millionaire) error {
 	query := `
-		INSERT INTO millionaires (
-			last_name, first_name, middle_name, birth_date, 
-			birth_place, company, net_worth, industry, 
-			country, path_to_photo, created_at, updated_at
-		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW())
-		RETURNING id`
+    INSERT INTO millionaires (
+        last_name, first_name, middle_name, birth_date, 
+        birth_place, company, net_worth, industry, 
+        country, path_to_photo, created_at, updated_at
+    ) 
+    VALUES ($1, $2, $3, NULLIF($4, '')::DATE, $5, $6, $7, $8, $9, $10, NOW(), NOW()) 
+    RETURNING id`
 
 	err := r.db.QueryRow(query,
 		m.LastName, m.FirstName, m.MiddleName, m.BirthDate,

@@ -3,11 +3,13 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
+	Env      string
 	Server   ServerConfig
 	Database DBConfig
 	SMTP     SMTPConfig
@@ -16,12 +18,12 @@ type Config struct {
 
 type ServerConfig struct {
 	Host string
-	Port string
+	Port int
 }
 
 type DBConfig struct {
 	Host     string
-	Port     string
+	Port     int
 	User     string
 	Password string
 	DBName   string
@@ -29,7 +31,7 @@ type DBConfig struct {
 
 type SMTPConfig struct {
 	Host     string
-	Port     string
+	Port     int
 	Username string
 	Password string
 	From     string
@@ -43,24 +45,41 @@ type GoogleConfig struct {
 
 func InitConfig(envPath string) (*Config, error) {
 	if err := godotenv.Load(envPath); err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+		log.Printf("Warning: .env file not found, using default values")
+	}
+
+	serverPort, err := strconv.Atoi(getEnv("SERVER_PORT", "8080"))
+	if err != nil {
+		log.Fatalf("Invalid SERVER_PORT value: %v", err)
+	}
+
+	dbPort, err := strconv.Atoi(getEnv("DB_PORT", "5432"))
+	if err != nil {
+		log.Fatalf("Invalid DB_PORT value: %v", err)
+	}
+
+	mailPort, err := strconv.Atoi(getEnv("MAIL_PORT", "587"))
+	if err != nil {
+		log.Fatalf("Invalid MAIL_PORT value: %v", err)
 	}
 
 	cfg := &Config{
+		Env: getEnv("APP_ENV", "local"),
+
 		Server: ServerConfig{
 			Host: getEnv("SERVER_HOST", "0.0.0.0"),
-			Port: getEnv("SERVER_PORT", "8080"),
+			Port: serverPort,
 		},
 		Database: DBConfig{
 			Host:     getEnv("DB_HOST", "localhost"),
-			Port:     getEnv("DB_PORT", "5432"),
+			Port:     dbPort,
 			User:     getEnv("DB_USER", "postgres"),
 			Password: getEnv("DB_PASSWORD", "password"),
 			DBName:   getEnv("DB_NAME", "MILLIONAIRE"),
 		},
 		SMTP: SMTPConfig{
 			Host:     getEnv("MAIL_HOST", "smtp.gmail.com"),
-			Port:     getEnv("MAIL_PORT", "587"),
+			Port:     mailPort,
 			Username: getEnv("MAIL_USER", ""),
 			Password: getEnv("MAIL_PASSWORD", ""),
 			From:     getEnv("MAIL_FROM", ""),

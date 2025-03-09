@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"millionaire-list/internal/models"
 	"millionaire-list/internal/service"
 	"net/http"
@@ -58,6 +59,7 @@ func (mh *MillionaireHandler) Create(c *gin.Context) {
 
 	err := mh.service.CreateMillionaire(&millionaire)
 	if err != nil {
+		log.Println("Ошибка создания миллионера:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при создании"})
 		return
 	}

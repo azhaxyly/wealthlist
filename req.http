@@ -1,0 +1,3 @@
+curl -X POST http://localhost:8080/api/millionaires/ \
+     -H "Content-Type: application/json" \
+     -d '{"firstName":"Elon","lastName":"Musk","company":"Tesla","netWorth":250000000000}'
