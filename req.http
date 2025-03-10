@@ -2,9 +2,9 @@ curl -X POST "http://localhost:8080/api/millionaires" \
      -H "Content-Type: application/json" \
      -d '{
            "lastName": "Page",
-           "firstName": "Lawrence",
+           "firstName": "Jan",
            "middleName": "Edward",
-           "birthDate": "26-03-1973",
+           "birthDate": "1973-03-26",
            "birthPlace": "Lansing, USA",
            "company": "Google",
            "netWorth": 105000000000,

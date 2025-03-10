@@ -1,0 +1,2 @@
+curl -X POST "http://localhost:8080/api/photo/add/1" \
+  -F "photo=@C:/Users/Maksat/Downloads/bill_gates.jpg"

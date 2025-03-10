@@ -32,12 +32,12 @@ func RunMigrationUp(db *sql.DB) error {
 		middle_name VARCHAR(500),
 		birth_date DATE,
 		birth_place TEXT,
-		net_worth BIGINT NOT NULL, -- Чистый капитал в долларах
-		industry TEXT, -- Индустрия, в которой заработал состояние
-		country TEXT, -- Страна проживания
-		company TEXT, -- Основная компания
-		biography TEXT, -- Краткая биография
-		path_to_photo TEXT, -- Путь к файлу с фото
+		net_worth BIGINT NOT NULL,
+		industry TEXT,
+		country TEXT,
+		company TEXT,
+		biography TEXT,
+		path_to_photo TEXT,
 		created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 		updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 	);

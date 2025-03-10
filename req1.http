@@ -1,2 +1,2 @@
-curl -X GET "http://localhost:8080/api/millionaires/1" \
+curl -X GET "http://localhost:8080/api/millionaires/" \
      -H "Content-Type: application/json" | jq

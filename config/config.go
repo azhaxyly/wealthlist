@@ -74,7 +74,7 @@ func InitConfig(envPath string) (*Config, error) {
 			Host:     getEnv("DB_HOST", "localhost"),
 			Port:     dbPort,
 			User:     getEnv("DB_USER", "postgres"),
-			Password: getEnv("DB_PASSWORD", "password"),
+			Password: getEnv("DB_PASSWORD", "12345678"),
 			DBName:   getEnv("DB_NAME", "MILLIONAIRE"),
 		},
 		SMTP: SMTPConfig{
