@@ -16,6 +16,7 @@ func SetupRouter(millionaireHandler *handler.MillionaireHandler) *gin.Engine {
 		millionaireGroup.POST("/", millionaireHandler.Create)
 		millionaireGroup.PUT("/:id", millionaireHandler.Update)
 		millionaireGroup.DELETE("/:id", millionaireHandler.Delete)
+		millionaireGroup.GET("/search", millionaireHandler.Search)
 	}
 
 	return router

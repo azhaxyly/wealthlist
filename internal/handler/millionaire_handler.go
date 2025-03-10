@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log"
 	"millionaire-list/internal/models"
 	"millionaire-list/internal/service"
@@ -25,6 +26,7 @@ func (mh *MillionaireHandler) GetAll(c *gin.Context) {
 
 	result, err := mh.service.GetAllMillionaires(pageNum, pageSize)
 	if err != nil {
+		fmt.Println("Ошибка в GetAllMillionaires:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при получении данных"})
 		return
 	}
@@ -53,6 +55,7 @@ func (mh *MillionaireHandler) GetByID(c *gin.Context) {
 func (mh *MillionaireHandler) Create(c *gin.Context) {
 	var millionaire models.Millionaire
 	if err := c.ShouldBindJSON(&millionaire); err != nil {
+		log.Println("Ошибка разбора JSON:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Некорректный JSON"})
 		return
 	}
@@ -77,6 +80,7 @@ func (mh *MillionaireHandler) Update(c *gin.Context) {
 
 	var millionaire models.Millionaire
 	if err := c.ShouldBindJSON(&millionaire); err != nil {
+		log.Println("Ошибка разбора JSON:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Некорректный JSON"})
 		return
 	}
@@ -106,4 +110,22 @@ func (mh *MillionaireHandler) Delete(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Миллионер удален"})
+}
+
+// 🔍 Поиск миллионеров по фильтрам
+func (mh *MillionaireHandler) Search(c *gin.Context) {
+	lastName := c.Query("lastName")
+	firstName := c.Query("firstName")
+	middleName := c.Query("middleName")
+	country := c.Query("country")
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+
+	result, err := mh.service.SearchMillionaire(lastName, firstName, middleName, country, page, pageSize)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка при поиске миллионеров"})
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }

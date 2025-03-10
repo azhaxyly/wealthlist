@@ -5,16 +5,7 @@ import (
 	"millionaire-list/internal/models"
 )
 
-func (r *MillionaireRepo) FetchMillionaires(query string, args ...interface{}) ([]models.Millionaire, error) {
-	rows, err := r.db.Query(query, args...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	return r.ScanRows(rows)
-}
-
-func (r *MillionaireRepo) ScanRows(rows *sql.Rows) ([]models.Millionaire, error) {
+func (r *millionaireRepo) ScanRows(rows *sql.Rows) ([]models.Millionaire, error) {
 	var millionaires []models.Millionaire
 	for rows.Next() {
 		var m models.Millionaire

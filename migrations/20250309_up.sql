@@ -1,16 +1,15 @@
 CREATE TABLE millionaires (
     id SERIAL PRIMARY KEY,
-    last_name VARCHAR(500) NOT NULL,
-    first_name VARCHAR(500) NOT NULL,
-    middle_name VARCHAR(500),
-    birth_date DATE,
-    birth_place TEXT,
-    net_worth BIGINT NOT NULL, -- Чистый капитал в долларах
-    industry TEXT, -- Индустрия, в которой заработал состояние
-    country TEXT, -- Страна проживания
-    company TEXT, -- Основная компания
-    biography TEXT, -- Краткая биография
-    path_to_photo TEXT, -- Путь к файлу с фото
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    last_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
+    birth_date VARCHAR(10),  -- храним дату как строку
+    birth_place VARCHAR(255),
+    company VARCHAR(255),
+    net_worth VARCHAR(50),  -- Число в виде строки
+    industry VARCHAR(255),
+    country VARCHAR(255),
+    path_to_photo VARCHAR(500),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );

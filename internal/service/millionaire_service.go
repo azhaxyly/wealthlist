@@ -6,10 +6,10 @@ import (
 )
 
 type MillionaireService struct {
-	repo *repo.MillionaireRepo
+	repo repo.MillionaireRepository
 }
 
-func NewMillionaireService(repo *repo.MillionaireRepo) *MillionaireService {
+func NewMillionaireService(repo repo.MillionaireRepository) *MillionaireService {
 	return &MillionaireService{repo: repo}
 }
 
@@ -50,28 +50,28 @@ func (s *MillionaireService) GetMillionaireByID(id int) (*models.Millionaire, er
 	return s.repo.GetByID(id)
 }
 
-func (s *MillionaireService) GetHomePageData() (models.HomePageDto, error) {
-	millionaires, err := s.repo.GetWithPhotos()
-	if err != nil {
-		return models.HomePageDto{}, err
-	}
+// func (s *MillionaireService) GetHomePageData() (models.HomePageDto, error) {
+// 	millionaires, err := s.repo.GetWithPhotos()
+// 	if err != nil {
+// 		return models.HomePageDto{}, err
+// 	}
 
-	topMillionaires := make([]models.Millionaire, 0)
-	featured := make([]models.Millionaire, 0)
+// 	topMillionaires := make([]models.Millionaire, 0)
+// 	featured := make([]models.Millionaire, 0)
 
-	for i, m := range millionaires {
-		if i < 5 {
-			topMillionaires = append(topMillionaires, m)
-		} else {
-			featured = append(featured, m)
-		}
-	}
+// 	for i, m := range millionaires {
+// 		if i < 5 {
+// 			topMillionaires = append(topMillionaires, m)
+// 		} else {
+// 			featured = append(featured, m)
+// 		}
+// 	}
 
-	return models.HomePageDto{
-		TopMillionaires: topMillionaires,
-		Featured:        featured,
-	}, nil
-}
+// 	return models.HomePageDto{
+// 		TopMillionaires: topMillionaires,
+// 		Featured:        featured,
+// 	}, nil
+// }
 
 func (s *MillionaireService) UpdateMillionaire(m *models.Millionaire) error {
 	return s.repo.Update(m)

@@ -1,3 +1,14 @@
-curl -X POST http://localhost:8080/api/millionaires/ \
+curl -X POST "http://localhost:8080/api/millionaires" \
      -H "Content-Type: application/json" \
-     -d '{"firstName":"Elon","lastName":"Musk","company":"Tesla","netWorth":250000000000}'
+     -d '{
+           "lastName": "Page",
+           "firstName": "Lawrence",
+           "middleName": "Edward",
+           "birthDate": "26-03-1973",
+           "birthPlace": "Lansing, USA",
+           "company": "Google",
+           "netWorth": 105000000000,
+           "industry": "Technology",
+           "country": "USA",
+           "pathToPhoto": "/uploads/photos/larry_page.jpg"
+         }'
