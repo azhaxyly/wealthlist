@@ -30,7 +30,7 @@ type millionaireRepo struct {
 }
 
 const (
-	baseQuery  = `SELECT id, last_name, first_name, middle_name, birth_date, birth_place, company, net_worth, industry, country, created_at, updated_at FROM millionaires`
+	baseQuery  = `SELECT id, last_name, first_name, middle_name, birth_date, birth_place, company, net_worth, industry, country, path_to_photo, created_at, updated_at FROM millionaires`
 	countQuery = `SELECT COUNT(*) FROM millionaires`
 )
 
@@ -44,15 +44,15 @@ func (r *millionaireRepo) Create(m *models.Millionaire) error {
     INSERT INTO millionaires (
         last_name, first_name, middle_name, birth_date, 
         birth_place, company, net_worth, industry, 
-        country, created_at, updated_at
+        country, path_to_photo, created_at, updated_at
     ) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW(), NOW()) 
     RETURNING id`
 
 	err := r.db.QueryRow(query,
 		m.LastName, m.FirstName, m.MiddleName, m.BirthDate,
 		m.BirthPlace, m.Company, m.NetWorth, m.Industry,
-		m.Country,
+		m.Country, m.PathToPhoto,
 	).Scan(&m.ID)
 
 	if err != nil {
@@ -68,10 +68,11 @@ func (r *millionaireRepo) GetByID(id int) (*models.Millionaire, error) {
 	row := r.db.QueryRow(query, id)
 
 	m := &models.Millionaire{}
+	r.log.Info("Scanning millionaire", slog.Any("query", query))
 	err := row.Scan(
 		&m.ID, &m.LastName, &m.FirstName, &m.MiddleName,
 		&m.BirthDate, &m.BirthPlace, &m.Company, &m.NetWorth,
-		&m.Industry, &m.Country,
+		&m.Industry, &m.Country, &m.PathToPhoto,
 		&m.CreatedAt, &m.UpdatedAt,
 	)
 
@@ -93,14 +94,14 @@ func (r *millionaireRepo) Update(m *models.Millionaire) error {
 		UPDATE millionaires 
 		SET last_name = $1, first_name = $2, middle_name = $3,
 		    birth_date = $4, birth_place = $5, company = $6,
-		    net_worth = $7, industry = $8, country = $9,
+		    net_worth = $7, industry = $8, country = $9, path_to_photo = $10,
 		    updated_at = NOW()
-		WHERE id = $10`
+		WHERE id = $11`
 
 	_, err := r.db.Exec(query,
 		m.LastName, m.FirstName, m.MiddleName, m.BirthDate,
 		m.BirthPlace, m.Company, m.NetWorth, m.Industry,
-		m.Country, m.ID,
+		m.Country, m.PathToPhoto, m.ID,
 	)
 
 	if err != nil {

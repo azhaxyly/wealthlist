@@ -1,16 +1,17 @@
 package service
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
+	"math/rand"
 	"mime/multipart"
 	"os"
-	"path/filepath"
+	"path"
+	"strconv"
 
 	"millionaire-list/internal/logger"
 	"millionaire-list/internal/repo"
-
-	"github.com/google/uuid"
 )
 
 type PhotoService struct {
@@ -25,18 +26,16 @@ func NewPhotoService(photoRepo *repo.PhotoRepo, log *slog.Logger) *PhotoService 
 	}
 }
 
-// Загружает фото и возвращает путь к файлу
 func (s *PhotoService) UploadPhoto(millionaireID int, file *multipart.FileHeader) (string, error) {
-	uniqueFileName := uuid.New().String() + filepath.Ext(file.Filename)
+	randSuffix := strconv.Itoa(rand.Intn(10000))
+	uniqueFileName := fmt.Sprintf("%d_%s_%s", millionaireID, randSuffix, path.Base(file.Filename))
 	savePath := "uploads/photos/" + uniqueFileName
 
-	// Создаём директорию, если её нет
 	if err := os.MkdirAll("uploads/photos", os.ModePerm); err != nil {
 		s.log.Error("Error creating directory", logger.Err(err))
 		return "", err
 	}
 
-	// Сохраняем файл
 	if err := saveUploadedFile(file, savePath); err != nil {
 		s.log.Error("Error saving file", logger.Err(err))
 		return "", err
@@ -45,12 +44,10 @@ func (s *PhotoService) UploadPhoto(millionaireID int, file *multipart.FileHeader
 	return savePath, nil
 }
 
-// Обновляет путь к фото в базе данных
 func (s *PhotoService) UpdatePhoto(millionaireID int, filePath string) error {
 	return s.photoRepo.UpdatePhotoPath(millionaireID, filePath)
 }
 
-// Вспомогательная функция для сохранения файла
 func saveUploadedFile(file *multipart.FileHeader, path string) error {
 	src, err := file.Open()
 	if err != nil {
@@ -66,4 +63,12 @@ func saveUploadedFile(file *multipart.FileHeader, path string) error {
 
 	_, err = io.Copy(dst, src)
 	return err
+}
+
+func (s *PhotoService) GetPhotoPath(millionaireID int) (string, error) {
+	return s.photoRepo.GetPhotoPath(millionaireID)
+}
+
+func (s *PhotoService) ClearPhotoPath(millionaireID int) error {
+	return s.photoRepo.ClearPhotoPath(millionaireID)
 }

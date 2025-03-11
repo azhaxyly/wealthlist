@@ -14,7 +14,7 @@ func (r *millionaireRepo) ScanRows(rows *sql.Rows) ([]models.Millionaire, error)
 		err := rows.Scan(
 			&m.ID, &m.LastName, &m.FirstName, &m.MiddleName,
 			&m.BirthDate, &m.BirthPlace, &m.Company, &m.NetWorth,
-			&m.Industry, &m.Country,
+			&m.Industry, &m.Country, &m.PathToPhoto,
 			&m.CreatedAt, &m.UpdatedAt,
 		)
 		if err != nil {

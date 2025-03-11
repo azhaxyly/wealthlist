@@ -36,14 +36,11 @@ func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *h
 		millionaireGroup.GET("/search", millionaireHandler.Search)
 	}
 
-	// Группа маршрутов для работы с фото
 	photoGroup := router.Group("/api/photo")
 	{
 		photoGroup.POST("/add/:millionaireId", photoHandler.AddPhotoForMillionaire)
-		// photoGroup.PUT("/update/:millionaireId", photoHandler.UpdateMillionairePhoto)
-		// photoGroup.DELETE("/delete/:millionaireId", photoHandler.DeleteMillionairePhoto)
-		// photoGroup.PUT("/update-paths", photoHandler.UpdatePhotoPathForMillionaires)
-		// photoGroup.GET("/:imageName", photoHandler.GetPhoto)
+		photoGroup.DELETE("/delete/:millionaireId", photoHandler.DeleteMillionairePhoto)
+		photoGroup.GET("/:imageName", photoHandler.GetPhoto)
 	}
 
 	return router

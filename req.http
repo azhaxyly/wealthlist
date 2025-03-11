@@ -2,7 +2,7 @@ curl -X POST "http://localhost:8080/api/millionaires" \
      -H "Content-Type: application/json" \
      -d '{
            "lastName": "Page",
-           "firstName": "Jan",
+           "firstName": "Aza",
            "middleName": "Edward",
            "birthDate": "1973-03-26",
            "birthPlace": "Lansing, USA",
