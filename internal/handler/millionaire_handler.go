@@ -2,11 +2,11 @@ package handler
 
 import (
 	"log/slog"
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/models"
-	"millionaire-list/internal/service"
 	"net/http"
 	"strconv"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/models"
+	"wealthlist/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

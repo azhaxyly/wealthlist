@@ -1,10 +1,10 @@
 package router
 
 import (
-	_ "millionaire-list/docs"
-	"millionaire-list/internal/handler"
-	"millionaire-list/internal/logger"
 	"time"
+	_ "wealthlist/docs"
+	"wealthlist/internal/handler"
+	"wealthlist/internal/logger"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -23,7 +23,7 @@ func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *h
 		c.Next()
 		duration := time.Since(start)
 
-		log.Info("HTTP-запрос",
+		log.Info("HTTP-request",
 			"method", c.Request.Method,
 			"path", c.Request.URL.Path,
 			"status", c.Writer.Status(),

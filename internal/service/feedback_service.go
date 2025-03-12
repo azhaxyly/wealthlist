@@ -3,10 +3,10 @@ package service
 import (
 	"fmt"
 	"log/slog"
-	"millionaire-list/config"
-	"millionaire-list/internal/models"
 	"net/smtp"
 	"strings"
+	"wealthlist/config"
+	"wealthlist/internal/models"
 )
 
 type FeedbackService struct {

@@ -1,4 +1,4 @@
-module millionaire-list
+module wealthlist
 
 go 1.23.4
 

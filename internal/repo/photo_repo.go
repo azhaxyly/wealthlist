@@ -3,7 +3,7 @@ package repo
 import (
 	"database/sql"
 	"log/slog"
-	"millionaire-list/internal/logger"
+	"wealthlist/internal/logger"
 )
 
 type PhotoRepo struct {

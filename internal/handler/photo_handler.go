@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/service"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

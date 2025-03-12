@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
-	"millionaire-list/internal/models"
 	"path/filepath"
+	"wealthlist/internal/models"
 )
 
 type MillionaireRepository interface {

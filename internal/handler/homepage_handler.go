@@ -3,9 +3,9 @@ package handler
 import (
 	"fmt"
 	"log/slog"
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/service"
 	"net/http"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

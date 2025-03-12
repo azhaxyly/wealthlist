@@ -10,8 +10,8 @@ import (
 	"path"
 	"strconv"
 
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/repo"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/repo"
 )
 
 type PhotoService struct {

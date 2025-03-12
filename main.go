@@ -1,6 +1,6 @@
 package main
 
-import "millionaire-list/cmd"
+import "wealthlist/cmd"
 
 func main() {
 	cmd.Run()

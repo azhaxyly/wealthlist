@@ -3,13 +3,13 @@ package cmd
 import (
 	"flag"
 	"log/slog"
-	"millionaire-list/config"
-	"millionaire-list/internal/handler"
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/repo"
-	"millionaire-list/internal/router"
-	"millionaire-list/internal/service"
-	"millionaire-list/migrations"
+	"wealthlist/config"
+	"wealthlist/internal/handler"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/repo"
+	"wealthlist/internal/router"
+	"wealthlist/internal/service"
+	"wealthlist/migrations"
 )
 
 func Run() {

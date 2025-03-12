@@ -3,7 +3,7 @@ package repo
 import (
 	"database/sql"
 	"log/slog"
-	"millionaire-list/internal/models"
+	"wealthlist/internal/models"
 )
 
 func (r *millionaireRepo) ScanRows(rows *sql.Rows) ([]models.Millionaire, error) {

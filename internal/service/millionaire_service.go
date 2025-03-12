@@ -2,9 +2,9 @@ package service
 
 import (
 	"log/slog"
-	"millionaire-list/internal/logger"
-	"millionaire-list/internal/models"
-	"millionaire-list/internal/repo"
+	"wealthlist/internal/logger"
+	"wealthlist/internal/models"
+	"wealthlist/internal/repo"
 )
 
 type MillionaireServiceInterface interface {
