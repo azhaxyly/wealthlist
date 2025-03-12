@@ -37,8 +37,8 @@ millionairelist/
 ## 🛠️ Installation and launch
 ### 🔹 1. Cloning a repository
 ```sh
-git clone https://github.com/your-name/wealthlist.git
-cd millionairelist
+git clone https://github.com/azhaxyly/wealthlist.git
+cd wealthlist
 ```
 
 ### 🔹 2. Setting up the environment
@@ -85,6 +85,6 @@ Examples of API requests:
 go run main.go
 ```
 
-## 📜 Лицензия
+## 📜 License
 MIT License © 2025
 
