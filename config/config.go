@@ -35,6 +35,7 @@ type SMTPConfig struct {
 	Username string
 	Password string
 	From     string
+	To       string
 }
 
 type GoogleConfig struct {
@@ -83,6 +84,7 @@ func InitConfig(envPath string) (*Config, error) {
 			Username: getEnv("MAIL_USER", ""),
 			Password: getEnv("MAIL_PASSWORD", ""),
 			From:     getEnv("MAIL_FROM", ""),
+			To:       getEnv("MAIL_TO", ""),
 		},
 		Google: GoogleConfig{
 			SpreadsheetID:     getEnv("GOOGLE_SPREADSHEET_ID", ""),

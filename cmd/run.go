@@ -52,7 +52,7 @@ func Run() {
 			}
 			log.Info("Migration down finished")
 		default:
-			log.Error("Invalid migration direction", slog.String("direction", *migrationDirection))
+			log.Error("Invalid migration direction", logger.Err(err))
 			return
 		}
 		return
@@ -68,12 +68,16 @@ func Run() {
 	photoRepo := repo.NewPhotoRepo(db, log)
 
 	millionaireService := service.NewMillionaireService(millionaireRepo, log)
+	homeService := service.NewHomeService(millionaireRepo, log)
 	photoService := service.NewPhotoService(photoRepo, log)
+	feedbackService := service.NewFeedbackService(cfg, log)
 
 	millionaireHandler := handler.NewMillionaireHandler(millionaireService, log)
+	homeHandler := handler.NewHomeHandler(homeService, log)
 	photoHandler := handler.NewPhotoHandler(photoService, log)
+	feedbackHandler := handler.NewFeedbackHandler(feedbackService, log)
 
-	r := router.SetupRouter(millionaireHandler, photoHandler)
+	r := router.SetupRouter(millionaireHandler, photoHandler, homeHandler, feedbackHandler)
 
 	log.Info("Starting server on :8080")
 	if err := r.Run(); err != nil {

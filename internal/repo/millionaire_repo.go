@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"millionaire-list/internal/models"
+	"path/filepath"
 )
 
 type MillionaireRepository interface {
@@ -15,6 +16,7 @@ type MillionaireRepository interface {
 	Update(m *models.Millionaire) error
 	Delete(id int) error
 	ScanRows(rows *sql.Rows) ([]models.Millionaire, error)
+	GetTopMillionaires(baseURL string) ([]models.Millionaire, error)
 }
 
 type MillionaireFilter struct {
@@ -182,4 +184,34 @@ func (r *millionaireRepo) GetAll(page int, pageSize int) (models.PaginationMilli
 	result.Millionaires = millionaires
 	result.Total = total
 	return result, nil
+}
+
+func (r *millionaireRepo) GetTopMillionaires(baseURL string) ([]models.Millionaire, error) {
+	var millionaires []models.Millionaire
+	query := `
+	SELECT id, last_name, first_name, middle_name, birth_date, birth_place,
+		   company, net_worth, industry, country, path_to_photo, created_at, updated_at
+	FROM millionaires ORDER BY net_worth DESC LIMIT 10`
+
+	rows, err := r.db.Query(query)
+	if err != nil {
+		r.log.Error("Error fetching top millionaires", slog.Any("error", err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	millionaires, err = r.ScanRows(rows)
+	if err != nil {
+		r.log.Error("Error scanning top millionaires", slog.Any("error", err))
+		return nil, err
+	}
+
+	for i := range millionaires {
+		if millionaires[i].PathToPhoto != nil && *millionaires[i].PathToPhoto != "" {
+			fullURL := fmt.Sprintf("%s/api/photo/%s", baseURL, filepath.Base(*millionaires[i].PathToPhoto))
+			millionaires[i].PathToPhoto = &fullURL
+		}
+	}
+
+	return millionaires, nil
 }

@@ -23,7 +23,6 @@ func NewMillionaireHandler(service service.MillionaireServiceInterface, log *slo
 	}
 }
 
-// 📋 Получить всех миллионеров
 func (mh *MillionaireHandler) GetAll(c *gin.Context) {
 	pageNum, _ := strconv.Atoi(c.DefaultQuery("pageNum", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
@@ -38,7 +37,6 @@ func (mh *MillionaireHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-// 🔎 Получить миллионера по ID
 func (mh *MillionaireHandler) GetByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -57,7 +55,6 @@ func (mh *MillionaireHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, millionaire)
 }
 
-// ➕ Создать миллионера
 func (mh *MillionaireHandler) Create(c *gin.Context) {
 	var millionaire models.Millionaire
 	if err := c.ShouldBindJSON(&millionaire); err != nil {
@@ -76,7 +73,6 @@ func (mh *MillionaireHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Millionaire created"})
 }
 
-// 🔄 Обновить миллионера
 func (mh *MillionaireHandler) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -103,7 +99,6 @@ func (mh *MillionaireHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Millionaire updated"})
 }
 
-// ❌ Удалить миллионера
 func (mh *MillionaireHandler) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -122,7 +117,6 @@ func (mh *MillionaireHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Millionaire deleted"})
 }
 
-// 🔍 Поиск миллионеров по фильтрам
 func (mh *MillionaireHandler) Search(c *gin.Context) {
 	lastName := c.Query("lastName")
 	firstName := c.Query("firstName")

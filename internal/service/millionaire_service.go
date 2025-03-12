@@ -31,42 +31,33 @@ func NewMillionaireService(repo repo.MillionaireRepository, log *slog.Logger) *m
 }
 
 func (s *millionaireService) CreateMillionaire(m *models.Millionaire) error {
-	const op = "service.CreateMillionaire"
-	log := s.log.With(
-		slog.String("op", op),
-	)
-
-	log.Info("creating millionaire")
+	s.log.Info("Creating millionaire")
 
 	err := s.repo.Create(m)
 	if err != nil {
-		log.Error("failed to create millionaire", logger.Err(err))
+		s.log.Error("Failed to create millionaire", logger.Err(err))
 		return err
 	}
 
-	log.Info("millionaire created successfully", slog.Int("id", m.ID))
+	s.log.Info("Millionaire created successfully", slog.Int("id", m.ID))
 	return nil
 }
 
 func (s *millionaireService) SearchMillionaire(lastName, firstName, middleName, country string, pageNum, pageSize int) (models.PaginationMillionaireDto, error) {
-	const op = "service.SearchMillionaire"
-	log := s.log.With(
-		slog.String("op", op),
+	s.log.Debug("Searching millionaire",
 		slog.String("lastName", lastName),
 		slog.String("firstName", firstName),
 		slog.Int("pageNum", pageNum),
 		slog.Int("pageSize", pageSize),
 	)
 
-	log.Debug("starting search")
-
 	if pageNum < 1 {
 		pageNum = 1
-		log.Warn("pageNum adjusted to minimum value", slog.Int("newPageNum", pageNum))
+		s.log.Warn("pageNum adjusted", slog.Int("newPageNum", pageNum))
 	}
 	if pageSize < 1 {
 		pageSize = 10
-		log.Warn("pageSize adjusted to default", slog.Int("newPageSize", pageSize))
+		s.log.Warn("pageSize adjusted", slog.Int("newPageSize", pageSize))
 	}
 
 	filter := repo.MillionaireFilter{
@@ -78,11 +69,11 @@ func (s *millionaireService) SearchMillionaire(lastName, firstName, middleName, 
 
 	result, err := s.repo.Search(filter, pageNum, pageSize)
 	if err != nil {
-		log.Error("search failed", logger.Err(err))
+		s.log.Error("Search failed", logger.Err(err))
 		return models.PaginationMillionaireDto{}, err
 	}
 
-	log.Info("search completed",
+	s.log.Info("Search completed",
 		slog.Int("totalResults", result.Total),
 		slog.Int("returnedResults", len(result.Millionaires)),
 	)
@@ -90,31 +81,27 @@ func (s *millionaireService) SearchMillionaire(lastName, firstName, middleName, 
 }
 
 func (s *millionaireService) GetAllMillionaires(pageNum, pageSize int) (models.PaginationMillionaireDto, error) {
-	const op = "service.GetAllMillionaires"
-	log := s.log.With(
-		slog.String("op", op),
+	s.log.Debug("Fetching millionaires",
 		slog.Int("pageNum", pageNum),
 		slog.Int("pageSize", pageSize),
 	)
 
-	log.Debug("fetching millionaires")
-
 	if pageNum < 1 {
 		pageNum = 1
-		log.Warn("pageNum adjusted to minimum value", slog.Int("newPageNum", pageNum))
+		s.log.Warn("pageNum adjusted", slog.Int("newPageNum", pageNum))
 	}
 	if pageSize < 1 {
 		pageSize = 10
-		log.Warn("pageSize adjusted to default", slog.Int("newPageSize", pageSize))
+		s.log.Warn("pageSize adjusted", slog.Int("newPageSize", pageSize))
 	}
 
 	result, err := s.repo.GetAll(pageNum, pageSize)
 	if err != nil {
-		log.Error("failed to fetch millionaires", logger.Err(err))
+		s.log.Error("Failed to fetch millionaires", logger.Err(err))
 		return models.PaginationMillionaireDto{}, err
 	}
 
-	log.Info("successfully fetched millionaires",
+	s.log.Info("Successfully fetched millionaires",
 		slog.Int("total", result.Total),
 		slog.Int("returned", len(result.Millionaires)),
 	)
@@ -122,86 +109,45 @@ func (s *millionaireService) GetAllMillionaires(pageNum, pageSize int) (models.P
 }
 
 func (s *millionaireService) GetMillionaireByID(id int) (*models.Millionaire, error) {
-	const op = "service.GetMillionaireByID"
-	log := s.log.With(
-		slog.String("op", op),
-		slog.Int("id", id),
-	)
-
-	log.Debug("fetching millionaire")
+	s.log.Debug("Fetching millionaire", slog.Int("id", id))
 
 	millionaire, err := s.repo.GetByID(id)
 	if err != nil {
-		log.Error("failed to fetch millionaire", logger.Err(err))
+		s.log.Error("Failed to fetch millionaire", logger.Err(err))
 		return nil, err
 	}
 
 	if millionaire == nil {
-		log.Warn("millionaire not found")
+		s.log.Warn("Millionaire not found")
 		return nil, nil
 	}
 
-	log.Debug("successfully fetched millionaire")
+	s.log.Debug("Successfully fetched millionaire")
 	return millionaire, nil
 }
 
-// func (s *MillionaireService) GetHomePageData() (models.HomePageDto, error) {
-// 	millionaires, err := s.repo.GetWithPhotos()
-// 	if err != nil {
-// 		return models.HomePageDto{}, err
-// 	}
-
-// 	topMillionaires := make([]models.Millionaire, 0)
-// 	featured := make([]models.Millionaire, 0)
-
-// 	for i, m := range millionaires {
-// 		if i < 5 {
-// 			topMillionaires = append(topMillionaires, m)
-// 		} else {
-// 			featured = append(featured, m)
-// 		}
-// 	}
-
-// 	return models.HomePageDto{
-// 		TopMillionaires: topMillionaires,
-// 		Featured:        featured,
-// 	}, nil
-// }
-
 func (s *millionaireService) UpdateMillionaire(m *models.Millionaire) error {
-	const op = "service.UpdateMillionaire"
-	log := s.log.With(
-		slog.String("op", op),
-		slog.Int("id", m.ID),
-	)
-
-	log.Info("updating millionaire")
+	s.log.Info("Updating millionaire", slog.Int("id", m.ID))
 
 	err := s.repo.Update(m)
 	if err != nil {
-		log.Error("update failed", logger.Err(err))
+		s.log.Error("Update failed", logger.Err(err))
 		return err
 	}
 
-	log.Info("millionaire updated successfully")
+	s.log.Info("Millionaire updated successfully")
 	return nil
 }
 
 func (s *millionaireService) DeleteMillionaire(id int) error {
-	const op = "service.DeleteMillionaire"
-	log := s.log.With(
-		slog.String("op", op),
-		slog.Int("id", id),
-	)
-
-	log.Info("deleting millionaire")
+	s.log.Info("Deleting millionaire", slog.Int("id", id))
 
 	err := s.repo.Delete(id)
 	if err != nil {
-		log.Error("delete failed", logger.Err(err))
+		s.log.Error("Delete failed", logger.Err(err))
 		return err
 	}
 
-	log.Info("millionaire deleted successfully")
+	s.log.Info("Millionaire deleted successfully")
 	return nil
 }

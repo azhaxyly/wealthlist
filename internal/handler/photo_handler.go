@@ -25,11 +25,19 @@ func NewPhotoHandler(photoService *service.PhotoService, log *slog.Logger) *Phot
 	}
 }
 
-func (h *PhotoHandler) AddPhotoForMillionaire(c *gin.Context) {
+func (h *PhotoHandler) getMillionaireID(c *gin.Context) (int, bool) {
 	millionaireID, err := strconv.Atoi(c.Param("millionaireId"))
 	if err != nil {
 		h.log.Error("Incorrect ID", logger.Err(err))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect millionaire ID"})
+		return 0, false
+	}
+	return millionaireID, true
+}
+
+func (h *PhotoHandler) AddPhotoForMillionaire(c *gin.Context) {
+	millionaireID, ok := h.getMillionaireID(c)
+	if !ok {
 		return
 	}
 
@@ -61,10 +69,8 @@ func (h *PhotoHandler) AddPhotoForMillionaire(c *gin.Context) {
 }
 
 func (h *PhotoHandler) DeleteMillionairePhoto(c *gin.Context) {
-	millionaireID, err := strconv.Atoi(c.Param("millionaireId"))
-	if err != nil {
-		h.log.Error("Incorrect ID", logger.Err(err))
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Incorrect millionaire ID"})
+	millionaireID, ok := h.getMillionaireID(c)
+	if !ok {
 		return
 	}
 

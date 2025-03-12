@@ -1,0 +1,11 @@
+curl -X POST http://localhost:8080/api/feedback \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "Азамат",
+           "email": "azamat@example.com",
+           "city_or_region": "Астана",
+           "organization": "Alem School",
+           "position": "Студент",
+           "gratitude_expression": "Отличный сервис!",
+           "message": "Спасибо за ваш труд!"
+         }'

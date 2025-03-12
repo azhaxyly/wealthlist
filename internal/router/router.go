@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *handler.PhotoHandler) *gin.Engine {
+func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *handler.PhotoHandler, homeHandler *handler.HomeHandler, feedbackHandler *handler.FeedbackHandler) *gin.Engine {
 	router := gin.Default()
 
 	log := logger.SetupLogger("dev")
@@ -41,6 +41,16 @@ func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *h
 		photoGroup.POST("/add/:millionaireId", photoHandler.AddPhotoForMillionaire)
 		photoGroup.DELETE("/delete/:millionaireId", photoHandler.DeleteMillionairePhoto)
 		photoGroup.GET("/:imageName", photoHandler.GetPhoto)
+	}
+
+	homeGroup := router.Group("/home")
+	{
+		homeGroup.GET("/", homeHandler.GetHomePage)
+	}
+
+	feedbackGroup := router.Group("/api/feedback")
+	{
+		feedbackGroup.POST("/", feedbackHandler.SendFeedback)
 	}
 
 	return router
