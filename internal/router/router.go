@@ -1,15 +1,20 @@
 package router
 
 import (
+	_ "millionaire-list/docs"
 	"millionaire-list/internal/handler"
 	"millionaire-list/internal/logger"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRouter(millionaireHandler *handler.MillionaireHandler, photoHandler *handler.PhotoHandler, homeHandler *handler.HomeHandler, feedbackHandler *handler.FeedbackHandler) *gin.Engine {
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	log := logger.SetupLogger("dev")
 

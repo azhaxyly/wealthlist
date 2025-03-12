@@ -1,0 +1,441 @@
+definitions:
+  models.FeedbackDto:
+    properties:
+      cityOrRegion:
+        type: string
+      email:
+        type: string
+      gratitudeExpression:
+        type: string
+      message:
+        type: string
+      name:
+        type: string
+      organization:
+        type: string
+      position:
+        type: string
+    required:
+    - email
+    - message
+    - name
+    type: object
+  models.Millionaire:
+    properties:
+      birthDate:
+        type: string
+      birthPlace:
+        type: string
+      company:
+        type: string
+      country:
+        type: string
+      createdAt:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      industry:
+        type: string
+      lastName:
+        type: string
+      middleName:
+        type: string
+      netWorth:
+        type: number
+      pathToPhoto:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.PaginationMillionaireDto:
+    properties:
+      millionaires:
+        items:
+          $ref: '#/definitions/models.Millionaire'
+        type: array
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/millionaires:
+    get:
+      description: Fetches a paginated list of millionaires from the database.
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: pageNum
+        type: integer
+      - description: 'Page size (default: 10)'
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of millionaires retrieved successfully
+          schema:
+            $ref: '#/definitions/models.PaginationMillionaireDto'
+        "500":
+          description: Error retrieving data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all millionaires
+      tags:
+      - millionaires
+    post:
+      consumes:
+      - application/json
+      description: Adds a new millionaire to the database.
+      parameters:
+      - description: Millionaire data
+        in: body
+        name: millionaire
+        required: true
+        schema:
+          $ref: '#/definitions/models.Millionaire'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Millionaire created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Incorrect JSON format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error creating millionaire
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new millionaire
+      tags:
+      - millionaires
+  /api/millionaires/{id}:
+    get:
+      description: Fetches a millionaire's details using their unique ID.
+      parameters:
+      - description: Millionaire ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Millionaire retrieved successfully
+          schema:
+            $ref: '#/definitions/models.Millionaire'
+        "400":
+          description: Incorrect ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Millionaire not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get millionaire by ID
+      tags:
+      - millionaires
+    put:
+      consumes:
+      - application/json
+      description: Updates millionaire details based on the provided ID.
+      parameters:
+      - description: Millionaire ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated millionaire data
+        in: body
+        name: millionaire
+        required: true
+        schema:
+          $ref: '#/definitions/models.Millionaire'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Millionaire updated
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Incorrect ID or JSON format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error updating millionaire
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a millionaire
+      tags:
+      - millionaires
+  /api/photo/{imageName}:
+    get:
+      description: Serves an image file from the uploads/photos directory based on
+        the provided image name.
+      parameters:
+      - description: Image filename
+        in: path
+        name: imageName
+        required: true
+        type: string
+      produces:
+      - image/jpeg
+      responses:
+        "200":
+          description: Returns the requested image file
+        "400":
+          description: Image name is required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Image not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a millionaire's photo
+      tags:
+      - millionaires
+  /api/photo/add/{millionaireId}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Allows uploading a photo file for an existing millionaire.
+      parameters:
+      - description: Photo file to upload
+        in: formData
+        name: photo
+        required: true
+        type: file
+      - description: Millionaire ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo uploaded successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Error receiving file
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error uploading or updating photo
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Upload a photo for a millionaire
+      tags:
+      - millionaires
+  /api/photo/delete/{millionaireId}:
+    delete:
+      description: Removes the associated photo of a millionaire and clears its record
+        in the database.
+      parameters:
+      - description: Millionaire ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo deleted successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: No photo found for this millionaire
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error deleting or clearing photo path
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a millionaire's photo
+      tags:
+      - millionaires
+  /feedback:
+    post:
+      consumes:
+      - application/json
+      description: Accepts JSON feedback and sends it via email.
+      parameters:
+      - description: Feedback data
+        in: body
+        name: feedback
+        required: true
+        schema:
+          $ref: '#/definitions/models.FeedbackDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Feedback successfully sent
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid data format or validation error
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Error while sending feedback
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Send feedback
+      tags:
+      - feedback
+  /home:
+    get:
+      description: Fetches homepage-related data and returns it as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Homepage data successfully retrieved
+          schema: {}
+        "500":
+          description: Failed to get homepage data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get homepage data
+      tags:
+      - home
+  /millionaires/{id}:
+    delete:
+      description: Deletes a millionaire based on the provided ID.
+      parameters:
+      - description: Millionaire ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Millionaire deleted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Incorrect ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Error deleting millionaire
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a millionaire
+      tags:
+      - millionaires
+  /millionaires/search:
+    get:
+      description: Searches for millionaires using optional filters such as name and
+        country.
+      parameters:
+      - description: Last name of the millionaire
+        in: query
+        name: lastName
+        type: string
+      - description: First name of the millionaire
+        in: query
+        name: firstName
+        type: string
+      - description: Middle name of the millionaire
+        in: query
+        name: middleName
+        type: string
+      - description: Country of the millionaire
+        in: query
+        name: country
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of records per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of matching millionaires
+          schema:
+            items:
+              $ref: '#/definitions/models.Millionaire'
+            type: array
+        "500":
+          description: Error searching millionaire
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Search for millionaires
+      tags:
+      - millionaires
+swagger: "2.0"

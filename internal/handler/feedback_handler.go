@@ -25,6 +25,17 @@ func NewFeedbackHandler(service *service.FeedbackService, log *slog.Logger) *Fee
 	}
 }
 
+// SendFeedback sends feedback via email.
+// @Summary Send feedback
+// @Description Accepts JSON feedback and sends it via email.
+// @Tags feedback
+// @Accept json
+// @Produce json
+// @Param feedback body models.FeedbackDto true "Feedback data"
+// @Success 200 {object} map[string]string "Feedback successfully sent"
+// @Failure 400 {object} map[string]interface{} "Invalid data format or validation error"
+// @Failure 500 {object} map[string]string "Error while sending feedback"
+// @Router /feedback [post]
 func (h *FeedbackHandler) SendFeedback(c *gin.Context) {
 	h.log.Info("Received feedback submission request")
 

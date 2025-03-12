@@ -13,7 +13,6 @@ type Config struct {
 	Server   ServerConfig
 	Database DBConfig
 	SMTP     SMTPConfig
-	Google   GoogleConfig
 }
 
 type ServerConfig struct {
@@ -36,12 +35,6 @@ type SMTPConfig struct {
 	Password string
 	From     string
 	To       string
-}
-
-type GoogleConfig struct {
-	SpreadsheetID     string
-	SheetName         string
-	PathToCredentials string
 }
 
 func InitConfig(envPath string) (*Config, error) {
@@ -85,11 +78,6 @@ func InitConfig(envPath string) (*Config, error) {
 			Password: getEnv("MAIL_PASSWORD", ""),
 			From:     getEnv("MAIL_FROM", ""),
 			To:       getEnv("MAIL_TO", ""),
-		},
-		Google: GoogleConfig{
-			SpreadsheetID:     getEnv("GOOGLE_SPREADSHEET_ID", ""),
-			SheetName:         getEnv("GOOGLE_SHEET_NAME", ""),
-			PathToCredentials: getEnv("GOOGLE_CREDENTIALS_PATH", ""),
 		},
 	}
 

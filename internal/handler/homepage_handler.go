@@ -19,6 +19,14 @@ func NewHomeHandler(service *service.HomeService, log *slog.Logger) *HomeHandler
 	return &HomeHandler{service: service, log: log}
 }
 
+// GetHomePage retrieves homepage data.
+// @Summary Get homepage data
+// @Description Fetches homepage-related data and returns it as JSON.
+// @Tags home
+// @Produce json
+// @Success 200 {object} interface{} "Homepage data successfully retrieved"
+// @Failure 500 {object} map[string]string "Failed to get homepage data"
+// @Router /home [get]
 func (h *HomeHandler) GetHomePage(c *gin.Context) {
 	h.log.Info("Received request for homepage data")
 
